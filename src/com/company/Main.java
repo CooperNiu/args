@@ -6,10 +6,9 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         String inputString = "White tigers live mostly in India Wild lions live mostly in Africa";
-        List<String> splitedStList;
-        splitedStList = toLowerCaseAndSplit(inputString);
-        removeStopWords(splitedStList);
-        Map<String, Integer> frequencies = getFrequencies(splitedStList);
+        List<String> splitStringList = toLowerCaseAndSplit(inputString);
+        removeStopWords(splitStringList);
+        Map<String, Integer> frequencies = getFrequencies(splitStringList);
         Map<String, Integer> sortedMap = sortMapByValue(frequencies);
         printResult(sortedMap);
     }
@@ -35,9 +34,7 @@ public class Main {
     private static List<String> toLowerCaseAndSplit(String st) {
         String lowerCaseString = st.toLowerCase();
         String[] splitedSt = lowerCaseString.split(" ");
-        List<String> splitedStList = new ArrayList<>();
-        splitedStList.addAll(Arrays.asList(splitedSt));
-        return splitedStList;
+        return new ArrayList<>(Arrays.asList(splitedSt));
     }
 
     /**
@@ -47,13 +44,13 @@ public class Main {
         if (oriMap == null || oriMap.isEmpty()) {
             return null;
         }
-        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-        List<Map.Entry<String, Integer>> entryList = new ArrayList<Map.Entry<String, Integer>>(
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(
                 oriMap.entrySet());
-        Collections.sort(entryList, new MapValueComparator());
+        entryList.sort(new MapValueComparator());
 
         Iterator<Map.Entry<String, Integer>> iter = entryList.iterator();
-        Map.Entry<String, Integer> tmpEntry = null;
+        Map.Entry<String, Integer> tmpEntry;
         while (iter.hasNext()) {
             tmpEntry = iter.next();
             sortedMap.put(tmpEntry.getKey(), tmpEntry.getValue());
@@ -65,7 +62,6 @@ public class Main {
      * 自定义比较器
      */
     static class MapValueComparator implements Comparator<Map.Entry<String, Integer>> {
-
         @Override
         public int compare(Map.Entry<String, Integer> me1, Map.Entry<String, Integer> me2) {
             return me2.getValue().compareTo(me1.getValue());
