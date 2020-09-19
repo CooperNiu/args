@@ -1,5 +1,7 @@
 package com.company.Args;
 
+import com.company.Args.Exception.FlagNotDefinedException;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

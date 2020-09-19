@@ -1,5 +1,6 @@
 package com.company.Args;
 
+import com.company.Args.Exception.FlagNotDefinedException;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package com.company.Args;
+package com.company.Args.Exception;
 
 public class FlagNotDefinedException extends RuntimeException {
 }
