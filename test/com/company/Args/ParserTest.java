@@ -28,4 +28,14 @@ public class ParserTest {
         assertEquals("-p 8080", result.get(1));
         assertEquals("-d /usr/logs", result.get(2));
     }
+
+    @Test
+    public void should_return_list_when_parse_given_flag_value_with_empty_space_between(){
+        Parser parser = new Parser("     -l true");
+
+        List<String> result = parser.parse();
+
+        assertEquals(1, result.size());
+        assertEquals("-l true", result.get(0));
+    }
 }
