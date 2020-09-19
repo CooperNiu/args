@@ -1,6 +1,8 @@
 package com.company.Args;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Schema {
 
@@ -9,18 +11,29 @@ public class Schema {
     private boolean lValue = false;
     private int pValue = 8080;
     private String dValue = "";
-    private Set<FlagSchema> flagSchemas;
+    private Set<SchemaElement> schemaElements;
 
-    public Schema(Set<FlagSchema> flagSchemas) {
-        this.flagSchemas = flagSchemas;
+    public Schema(Set<SchemaElement> schemaElements) {
+        this.schemaElements = schemaElements;
     }
 
-    public Object getType(String flag) {
-        return flagSchemas.stream()
-                .filter(flagSchema -> flagSchema.equalsWith(flag))
-                .findFirst()
-                .get()
-                .getType();
+    public Object getFlagType(String flag) {
+        List<SchemaElement> schemaElements = findElementByFlag(flag);
+        boolean flagNotExist = schemaElements.size() == 0;
+
+        if (flagNotExist){
+            throw new FlagNotDefinedException();
+        }
+
+        SchemaElement matchedElement = schemaElements.get(0);
+
+        return matchedElement.getType();
+    }
+
+    private List<SchemaElement> findElementByFlag(String flag) {
+        return schemaElements.stream()
+                .filter(schemaElement -> schemaElement.getFlag().equals(flag))
+                .collect(Collectors.toList());
     }
 
     public void setType(Object type) {
