@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+//Args里直接用了结构化的Schema，没有使用SchemaParser
 public class SchemaParser {
     private String inputSchema;
 

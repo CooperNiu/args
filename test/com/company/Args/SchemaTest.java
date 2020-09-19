@@ -1,33 +1,41 @@
 package com.company.Args;
 
 import com.company.Args.Exception.FlagNotDefinedException;
-import org.junit.Assert;
 import org.junit.Test;
+
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+
 public class SchemaTest {
-    @Test(expected = FlagNotDefinedException.class)
-    public void should_throw_exception_when_get_flag_type_given_flag_not_exist_in_schema_definition(){
+    @Test
+    public void should_return_flag_type_when_get_flag_type_given_schema() {
+        //given
         Set<SchemaElement> schemaElements = new HashSet<>();
-        schemaElements.add(new SchemaElement("l", Boolean.TYPE));
+        schemaElements.add(new SchemaElement("l", Boolean.class));
+        schemaElements.add(new SchemaElement("p", Integer.class));
+        schemaElements.add(new SchemaElement("d", String.class));
         Schema schema = new Schema(schemaElements);
 
-        schema.getFlagType("p");
+        //when
+
+        //then
+        assertEquals(Boolean.class, schema.getFlagType("l"));
+        assertEquals(Integer.class, schema.getFlagType("p"));
+        assertEquals(String.class, schema.getFlagType("d"));
     }
 
-    @Test
-    public void should_return_boolean_when_get_type_given_flag(){
+    @Test(expected = FlagNotDefinedException.class)
+    public void should_throw_exception_when_get_flag_type_given_flag_not_exist_in_schema_definition() {
+        //given
         Set<SchemaElement> schemaElements = new HashSet<>();
-        schemaElements.add(new SchemaElement("l", Boolean.TYPE));
-        schemaElements.add(new SchemaElement("p", Integer.TYPE));
-        schemaElements.add(new SchemaElement("d", String.class.getSimpleName()));
-
-        System.out.println(String.class.getSimpleName());
+        schemaElements.add(new SchemaElement("l", Boolean.class));
         Schema schema = new Schema(schemaElements);
 
-        Assert.assertEquals(Boolean.TYPE, schema.getFlagType("l"));
-        Assert.assertEquals(Integer.TYPE, schema.getFlagType("p"));
-        Assert.assertEquals(String.class.getSimpleName(), schema.getFlagType("d"));
+        //when
+
+        //then
+        schema.getFlagType("p");
     }
 }

@@ -1,5 +1,7 @@
 package com.company.Args;
 
+import com.company.Args.Exception.FlagDuplicationException;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -9,19 +11,24 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 public class ArgsTest {
-    @Test
-    public void should_return_type_when_analyze_given_schema_and_parsed_string() {
+    private Args args;
+
+    @Before
+    public void setUp() {
         //given
         Set<SchemaElement> schemaElements = new HashSet<>();
         schemaElements.add(new SchemaElement("l", Boolean.class));
         schemaElements.add(new SchemaElement("p", Integer.class));
         schemaElements.add(new SchemaElement("d", String.class));
         Schema schema = new Schema(schemaElements);
-        Parser parser = new Parser("-l true -p 8080 -d /usr/logs");
-        Args args = new Args(schema, parser);
+        Lexer lexer = new Lexer();
+        args = new Args(schema, lexer);
+    }
 
+    @Test
+    public void should_return_type_when_analyze_given_schema_and_parsed_string() {
         //when
-        List<Arg> arguments =  args.analyze();
+        List<Argument> arguments =  args.analyze("-l true -p 8080 -d /usr/logs");
 
         //then
         assertEquals(3, arguments.size());
@@ -31,32 +38,20 @@ public class ArgsTest {
     }
 
     @Test
-    public void should_return_string_list_when_scan_given_string(){
-        String argsText = "-l true -p 8080 -d uere/logs";
+    public void should_return_default_type_when_analyze_given_schema_and_parsed_string_without_type() {
+        //when
+        List<Argument> arguments =  args.analyze("-l -p 8080 -d /usr/logs");
 
-        Args args = new Args(argsText);
-
-        List<KeyValuePair> keyValuePairs = args.scan();
-
-        assertEquals(3, keyValuePairs.size());
-        assertEquals(true, keyValuePairs.contains("l true"));
-        assertEquals(true, keyValuePairs.contains("p 8080"));
-        assertEquals(true, keyValuePairs.contains("d uere/logs"));
-
+        //then
+        assertEquals(3, arguments.size());
+        assertEquals(false, arguments.get(0).getValue());
+        assertEquals(8080, arguments.get(1).getValue());
+        assertEquals("/usr/logs", arguments.get(2).getValue());
     }
 
-    @Test
-    public void should_return_value_when_given_args() {
-        String argsText = "-l true -p 8080 -d uere/logs";
-
-        Args args = new Args(argsText);
-
-        List<KeyValuePair> keyValuePairs = args.scan();
-
-        assertEquals("true", args.getValueOf("l"));
-        assertEquals("8080", args.getValueOf("p"));
-        assertEquals("uere/logs", args.getValueOf("d"));
+    @Test(expected = FlagDuplicationException.class)
+    public void should_throw_flag_duplication_exception_when_analyze_given_schema_and_parsed_string_with_duplicated_flag() {
+        //when
+        args.analyze("-p 8080 -p 2020");
     }
-
-
 }
