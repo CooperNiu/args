@@ -16,8 +16,6 @@ public class SchemaTest {
         System.out.println(String.class.getSimpleName());
         Schema schema = new Schema(flagSchemas);
 
-        Object type = schema.getType("l");
-
         Assert.assertEquals(Boolean.TYPE, schema.getType("l"));
         Assert.assertEquals(Integer.TYPE, schema.getType("p"));
         Assert.assertEquals(String.class.getSimpleName(), schema.getType("d"));
