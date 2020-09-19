@@ -38,4 +38,11 @@ public class ParserTest {
         assertEquals(1, result.size());
         assertEquals("-l true", result.get(0));
     }
+
+    @Test(expected = EmptyStringException.class)
+    public void should_throw_exception_when_parse_given_empty_string(){
+        Parser parser = new Parser("   ");
+
+        parser.parse();
+    }
 }
