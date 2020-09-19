@@ -2,15 +2,20 @@ package com.company.Args;
 
 public class Arg {
     private String flag;
-    private String value;
+    private Object value;
     private String type;
 
     public Arg(String argPair, Schema schema) {
 
     }
 
-    Object parseValue(){
-        return new Object();
+    public Arg(String flag, Object value) {
+        this.flag = flag;
+        this.value = value;
+    }
+
+    public Object getValue(){
+        return value;
     }
 
     boolean withFlag(String flag){

@@ -7,13 +7,45 @@ import java.util.stream.Collectors;
 
 public class Args {
     private String argsText;
-    List<Arg> argPairs;
+    private Parser parser;
     String args;
     Schema schema;
 
-    public Args(String args, Schema schema) {
+    public Args(String args, Parser parser) {
         this.args = args;
+        this.parser = parser;
+    }
+
+    public Args(Schema schema, Parser parser) {
         this.schema = schema;
+        this.parser = parser;
+    }
+
+    public List<Arg> analyze(){
+        List<String> parsedString = parser.parse();
+        List<Arg> args = new ArrayList<>();
+        parsedString.forEach(item -> {
+            String[] split = item.split("\\s+");
+            String flag = split[0].substring(1);
+            String value = split[1];
+            args.add(new Arg(flag, parseValueBy(schema, flag, value)));
+        });
+
+        return args;
+    }
+
+    private Object parseValueBy(Schema schema, String flag, String value) {
+        Object flagType = schema.getFlagType(flag);
+
+        if (flagType.equals(Boolean.class)){
+            return Boolean.parseBoolean(value);
+        }
+
+        if (flagType.equals(Integer.class)){
+            return Integer.parseInt(value);
+        }
+
+        return value;
     }
 
     public Args(String argsText) {
